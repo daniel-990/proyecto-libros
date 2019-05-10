@@ -1,33 +1,34 @@
 
         <%- include partials/header.ejs %>
 
-        <div class="container">
-            <br>
-            <h1 class="titulo">Lista de libros</h1>
-            <hr>
-            <div class="row">
-                <% libros.forEach(function (libro) { %>
+        <%- include partials/navbar.ejs %>
 
-                    <div class="col-md-4">
-                        <div class="card cartas-libros" style="width: 18rem;">
-                            <img src="<%= libro.portadalibro %>" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title titulo-libros"><%= libro.nombrelibro %></h5>
-                                <hr>
-                                <p class="card-text">
-                                    Propietario: <strong><%= libro.nombrepropietario %></strong>
-                                    <br>
-                                    Id: <strong><%= libro.id %></strong>
-                                </p>
-                                <a href="?<%= libro.id %>-<%= libro.ref %>" class="btn btn-success"><i class="fas fa-shopping-bag"></i> | Agregar</a>
+        <section class="contenedor-app contenedor-catalogo-home">
+            <div class="container">
+                <br>
+                <h1 class="titulo">Lista de libros</h1>
+                <hr>
+                <div class="row">
+                    <% libros.forEach(function (libro) { %>
+
+                        <div class="col-md-4">
+                            <div class="card cartas-libros" style="width: 18rem;">
+                                <img src="<%= libro.portadalibro %>" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title titulo-libros"><%= libro.nombrelibro %></h5>
+                                    <hr>
+                                    <p class="card-text">
+                                        Propietario: <strong><%= libro.nombrepropietario %></strong>
+                                        <br>
+                                        Id: <strong><%= libro.id %></strong>
+                                    </p>
+                                    <a href="?<%= libro.id %>-<%= libro.ref %>" class="btn btn-catalogo-l"><i class="fas fa-tag"></i> | Agregar</a>
+                                </div>
                             </div>
-                        </div>
-                    </div> 
-
-                <% }) %>
-
+                        </div> 
+                    <% }) %>
+                </div>
             </div>
-        
-        </div>
+        </section>
 
         <%- include partials/footer.ejs %>

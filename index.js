@@ -1,68 +1,49 @@
 const express  = require('express');
+const mysql = require('mysql');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+
+//instancias
 const app = express();
+const { database } = require('./database/database');
+app.use(bodyParser.json());
+app.use(cors());
 
-//app.use(express.json());
+//conexion
+const db = mysql.createConnection(database);
+db.connect();
+
+
 app.set('port', 3000);
-
 app.set('view engine', 'ejs');
 
-//routes
+/**
+ * Routes
+ * Base de datos de prueba.
+ */
 
 app.get('/', (req, res) => {
-    const data = [
-        {
-            "nombrelibro": "100 años de soledad",
-            "id": "L001",
-            "ref":"llj001",
-            "cantidad": 10,
-            "nombrepropietario": "Daniel Arango Villegas",
-            "ciudad": "Medellin",
-            "precio": 50000,
-            "pais": "Colombia",
-            "numerohojas":300,
-            "portadalibro":"https://via.placeholder.com/150x150"
-        },
-        {
-            "nombrelibro": "La Guerra de las Galaxias III",
-            "id": "L002",
-            "ref":"llj001",
-            "cantidad": 1,
-            "nombrepropietario": "Catalina Arango Villegas",
-            "ciudad": "Rionegro",
-            "precio": 30000,
-            "pais": "Colombia",
-            "numerohojas":1000,
-            "portadalibro":"https://via.placeholder.com/150x150"
+    const sql = 'SELECT * FROM libros';
+    db.query(sql, (err, result)=>{
+        if(err){
+            throw err;
+        }else{
+            console.log("Home Data: ",result);
+            const data = result;
+            res.render('index.ejs', {libros:data});
         }
-    ]
-    res.render('index.ejs', {libros:data});
+    })
 })
 
-
-//ejemplo de mi base de datos de prueba
-app.get('/libros', (req, res) => {
-    res.json({
-        "libros":[{
-            "nombrelibro": "100 años de soledad",
-            "id": 0001,
-            "cantidad": 10,
-            "nombrepropietario": "Daniel Arango Villegas",
-            "ciudad": "Medellin",
-            "precio": 50000,
-            "pais": "Colombia",
-            "numerohojas":300
-        },
-        {
-            "nombrelibro": "10 años de soledad",
-            "id": 0002,
-            "cantidad": 1,
-            "nombrepropietario": "Daniel Arango Villegas",
-            "ciudad": "Medellin",
-            "precio": 30000,
-            "pais": "Colombia",
-            "numerohojas":1000
-        }]
-
+app.get('/catalogo', function(req, res){
+    const sql = 'SELECT * FROM libros';
+    db.query(sql, (err, result)=>{
+        if(err){
+            throw err;
+        }else{
+            console.log("Catalogo Data: ",result);
+            res.render('catalogo.ejs', {catlibros:result});
+        }
     })
 })
 
@@ -80,6 +61,7 @@ app.put('/libros/:id', (req, res) =>{
 app.delete('/libro/:libroId',(req,res) =>{
     res.send(`libro ${req.params.libroId} borrado`);
 })
+
 
 //statics
 app.use(express.static('public'));

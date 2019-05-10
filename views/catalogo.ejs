@@ -1,0 +1,33 @@
+
+        <%- include partials/header.ejs %>
+
+        <%- include partials/navbar.ejs %>
+
+        <section class="contenedor-app contenedor-catalogo-catalogo">
+            <div class="container">
+                <br>
+                <h1 class="titulo">Catalogo</h1>
+                <hr>
+                <div class="row">
+                    <% catlibros.forEach(items => { %>
+                        <div class="col-md-4">
+                            <div class="card cartas-libros" style="width: 18rem;">
+                                <img src="<%= items.portadalibro %>" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title titulo-libros"><%= items.nombrelibro %></h5>
+                                    <hr>
+                                    <p class="card-text">
+                                        Propietario: <strong><%= items.nombrepropietario %></strong>
+                                        <br>
+                                        Id: <strong><%= items.ref %></strong>
+                                    </p>
+                                    <a href="?<%= items.ref %>_" class="btn btn-catalogo-l"><i class="fas fa-tag"></i> | Agregar</a>
+                                </div>
+                            </div>
+                        </div> 
+                    <% }); %>
+                </div>
+            </div>
+        </section>
+
+        <%- include partials/footer.ejs %>
