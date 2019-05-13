@@ -1,7 +1,16 @@
+
+/**
+ *      servidor v.0.1
+ * 
+ */
+
+
 const express  = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+
+const urlencodedParser = bodyParser.urlencoded({ extended: false})
 
 //instancias
 const app = express();
@@ -13,14 +22,13 @@ app.use(cors());
 const db = mysql.createConnection(database);
 db.connect();
 
-
 app.set('port', 3000);
 app.set('view engine', 'ejs');
 
 /**
  * Routes
  * Base de datos de prueba.
- */
+ **/
 
 app.get('/', (req, res) => {
     const sql = 'SELECT * FROM libros';
@@ -35,9 +43,9 @@ app.get('/', (req, res) => {
     })
 })
 
-app.get('/catalogo', function(req, res){
+app.get('/catalogo', (req, res) => {
     const sql = 'SELECT * FROM libros';
-    db.query(sql, (err, result)=>{
+    db.query(sql, (err, result) => {
         if(err){
             throw err;
         }else{
@@ -47,21 +55,50 @@ app.get('/catalogo', function(req, res){
     })
 })
 
-app.post('/libros/:id', (req, res) => {
+app.get('/carrito', (req, res) => {
+    const sql = 'SELECT * FROM libros';
+    db.query(sql, (err, result) => {
+        if(err){
+            throw err;
+        }else{
+            res.render('carrito.ejs', {ref:result});
+        }
+    })
+})
+
+app.post('/carrito/add', urlencodedParser, (req, res) => {
+    const { nombre, correo, ref } = req.body;
+    const clibros = {
+        nombre,
+        correo,
+        ref
+    }
+    db.query('INSERT INTO comprar SET ?', [clibros], (err, result) =>{
+        if(err){
+            throw err;
+        }else{
+            console.log(result);
+            console.log(clibros);
+        }
+    });
+    res.redirect('/carrito');
+})
+
+app.post('/carrito/:id', (req, res) => {
     console.log(req.body);
     console.log(req.params);
-    res.send('respuesta recivida');
+    res.send('post request received');
 })
 
-app.put('/libros/:id', (req, res) =>{
+app.delete('/carrito/:carritoId', (req, res) => {
+    console.log(req.params);
+    res.send(`usuario ${req.params.userId} eliminado`);
+})
+
+app.put('/carrito/:carritoId', (req, res) => {
     console.log(req.body);
-    res.send(`libro ${req.params.id} actualizado`);
+    res.send(`usuario ${req.params.userId} actualizado`);
 })
-
-app.delete('/libro/:libroId',(req,res) =>{
-    res.send(`libro ${req.params.libroId} borrado`);
-})
-
 
 //statics
 app.use(express.static('public'));
